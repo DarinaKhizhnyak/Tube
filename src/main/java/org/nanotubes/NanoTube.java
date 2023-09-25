@@ -136,11 +136,10 @@ public class NanoTube extends Application {
             int n = Integer.parseInt(textNumber.getText());
             tube.setHeight(Double.parseDouble(textFieldHeight.getText()));
             tube.setRadius(Double.parseDouble(textFieldRadius.getText()));
-            ObservableList<Particle> particles = new Generation(tube, n, group).ParticlesGeneration();
-
+            ObservableList<Particle> particles = new Generation(tube, n).ParticlesGeneration();
+            new Mapping(n,group,tube,particles).MappingParticle();
             buttonEnergyMinimization.setOnAction(actionEvent -> {
-                Minimization minimization = new Minimization(particles,2,tube);
-                ObservableList<Particle> list = minimization.minimization();
+                ObservableList<Particle> list = new Minimization(particles,2,tube).minimization();
                 new Mapping(n,group,tube,list).MappingParticle();
             });
         });

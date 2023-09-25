@@ -18,17 +18,29 @@ public class Mapping {
      * Группа граффических объекто
      */
     private final Group group;
+    /**
+     * Цилиндр
+     */
+    private final Tube tube;
 
     public Mapping(int numberOfParticle, Group group, Tube tube, ObservableList<Particle> list) {
         this.numberOfParticle = numberOfParticle;
         this.group = group;
         this.list = list;
-        group.getChildren().clear();
-        group.getChildren().add(tube.getTube());
+        this.tube = tube;
     }
     public void MappingParticle() {
+        group.getChildren().clear();
+        group.getChildren().add(tube.getTube());
         for (int i = 0; i < numberOfParticle; i++) {
             group.getChildren().add(list.get(i).getParticle());
+        }
+    }
+    public void Print() {
+        for (int i = 0; i < numberOfParticle; i++) {
+            System.out.println(list.get(i).getPhi());
+            System.out.println(list.get(i).getZ());
+            System.out.println(i);
         }
     }
 

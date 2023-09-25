@@ -3,7 +3,6 @@ package org.nanotubes.generation.Geom;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
-import org.nanotubes.generation.PoissonDisk.Vector2DDouble;
 
 /**
  * Класс описывающий частицу
@@ -39,7 +38,7 @@ public class Particle {
      * @param radius радиус частицы
      * @param color цвет частицы
      */
-   public Particle (double phi, double rho, double z, double radius, Color color) {
+   public Particle(double phi, double rho, double z, double radius, Color color) {
        this.particle = new Sphere(radius);
        this.radius = radius;
        this.phi = phi;

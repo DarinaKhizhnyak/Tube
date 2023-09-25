@@ -2,7 +2,6 @@ package org.nanotubes.generation;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 import org.nanotubes.generation.PoissonDisk.PoissonDiskIn2D;
@@ -34,10 +33,6 @@ public class Generation {
      */
     private final int numberOfParticle;
     /**
-     * Группа граффических объекто
-     */
-    private final Group group;
-    /**
      * Радиус частицы
      */
     private final double radius;
@@ -46,15 +41,11 @@ public class Generation {
      * Конструктор класса Ganeration создающий объект Ganeration
      * @param tube параметры цилиндра
      * @param numberOfParticle количество частиц
-     * @param group руппа графических объектов
      */
-    public Generation(Tube tube, int numberOfParticle, Group group) {
+    public Generation(Tube tube, int numberOfParticle) {
         this.tube = tube;
         this.numberOfParticle = numberOfParticle;
-        this.group = group;
         radius = Math.sqrt(tube.getRadius()*tube.getHeight()/(2*numberOfParticle));
-        group.getChildren().clear();
-        group.getChildren().add(tube.getTube());
     }
 
     /**
@@ -71,7 +62,6 @@ public class Generation {
             Particle particle = new Particle(list.get(i).getX()/tube.getRadius(), tube.getRadius(),
                     list.get(i).getY()-tube.getHeight()/2, radius, COLORS[i % COLORS.length]);
             particlesList.add(particle);
-            group.getChildren().add(particlesList.get(i).getParticle());
         }
 
         return particlesList;
