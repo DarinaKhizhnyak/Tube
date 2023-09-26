@@ -95,6 +95,8 @@ public class Particle {
      */
     public void setPhi(double phi) {
         this.phi = phi;
+        particle.setTranslateX(rho * Math.cos(phi));
+        particle.setTranslateZ(rho * Math.sin(phi));
     }
 
     /**
@@ -111,6 +113,8 @@ public class Particle {
      */
     public void setRho(double rho) {
         this.rho = rho;
+        particle.setTranslateX(rho * Math.cos(phi));
+        particle.setTranslateZ(rho * Math.sin(phi));
     }
 
     /**
@@ -127,6 +131,7 @@ public class Particle {
      */
     public void setZ(double z) {
         this.z = z;
+        particle.setTranslateY(z);
     }
 
     /**

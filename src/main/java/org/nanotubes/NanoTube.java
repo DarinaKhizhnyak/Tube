@@ -1,6 +1,7 @@
 package org.nanotubes;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javafx.geometry.HPos;
@@ -22,7 +23,8 @@ import javafx.stage.Stage;
 import org.nanotubes.generation.Generation;
 import org.nanotubes.generation.Geom.Particle;
 import org.nanotubes.generation.Geom.Tube;
-import org.nanotubes.minimization.Mapping;
+import org.nanotubes.generation.Mapping.TubeView;
+import org.nanotubes.generation.Mapping.Mapping;
 import org.nanotubes.minimization.Minimization;
 
 import java.util.Arrays;
@@ -119,8 +121,9 @@ public class NanoTube extends Application {
         camera.setFieldOfView(20);
         camera.getTransforms().addAll (rotateX, rotateY, new Translate(0, 0, -500));
 
-        Tube tube = new Tube(80,80,Color.rgb(225,225,0));
-        Group group = new Group(tube.getTube());
+
+        Tube tube = new Tube(80,80);
+        Group group = new Group(new TubeView(tube,Color.YELLOW).asNode());
         SubScene subScene = new SubScene(group, 750, 550, true, SceneAntialiasing.BALANCED);
         subScene.setFill (Color.rgb (129, 129, 129));
         subScene.setCamera(camera);
@@ -132,16 +135,20 @@ public class NanoTube extends Application {
         GridPane.setHalignment(root3d, HPos.CENTER);
         GridPane.setValignment(root3d, VPos.CENTER);
 
+        final ObservableList<Particle> particlesList = FXCollections.observableArrayList();
+
         buttonEnter.setOnAction(e -> {
             int n = Integer.parseInt(textNumber.getText());
             tube.setHeight(Double.parseDouble(textFieldHeight.getText()));
             tube.setRadius(Double.parseDouble(textFieldRadius.getText()));
-            ObservableList<Particle> particles = new Generation(tube, n).ParticlesGeneration();
+            ObservableList<Particle> particles = new Generation(tube, n).ParticlesGeneration(particlesList);
             new Mapping(n,group,tube,particles).MappingParticle();
-            buttonEnergyMinimization.setOnAction(actionEvent -> {
-                ObservableList<Particle> list = new Minimization(particles,2,tube).minimization();
-                new Mapping(n,group,tube,list).MappingParticle();
-            });
+
+        });
+
+        buttonEnergyMinimization.setOnAction(actionEvent -> {
+            ObservableList<Particle> list = new Minimization(particlesList,2,tube).minimization();
+            new Mapping(list.size(),group,tube,list).MappingParticle();
         });
 
         var scene = new Scene(Top, WIDTH,HEIGHT);

@@ -96,7 +96,7 @@ public class Minimization {
         arrayCoefficientForZ = extendArray(arrayCoefficientForZ, COEFFICIENT_FOR_Z);
         arrayCoefficientForAngel = extendArray(arrayCoefficientForAngel, COEFFICIENT_FOR_ANGLE);
 
-        while (COEFFICIENT_FOR_ANGLE > ACCEPTABLE_COEFFICIENT_VALUE_K_ANGEL && COEFFICIENT_FOR_Z > ACCEPTABLE_COEFFICIENT_VALUE_K_Z && energyOld > energyNew) {
+        while (COEFFICIENT_FOR_ANGLE > ACCEPTABLE_COEFFICIENT_VALUE_K_ANGEL && COEFFICIENT_FOR_Z > ACCEPTABLE_COEFFICIENT_VALUE_K_Z && energyOld >= energyNew) {
             if (energyOld - energyNew < ACCEPTABLE_VALUE_OF_ENERGY_DIFFERENCE) {
                 COEFFICIENT_FOR_Z = COEFFICIENT_FOR_Z/2;
                 COEFFICIENT_FOR_ANGLE = COEFFICIENT_FOR_ANGLE/2;

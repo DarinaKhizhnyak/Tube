@@ -1,89 +1,77 @@
 package org.nanotubes.generation.Geom;
 
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Cylinder;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 /**
- * Класс описывающий цилиндр, на котором распологаются частицы: радиус, высота, форма, цвет
+ * Класс создающий математическую модель цилиндра со списком свойств
  */
 public class Tube {
     /**
-     * Радиус цилиндра
+     * Свойство цилиндра - высота
      */
-    private double radius;
-    /**
-     * Высота цилиндра
-     */
-    private double height;
-    /**
-     * Форма объекта: цилиндр
-     */
-    private final Cylinder tube;
-    /**
-     * Цвет цилиндра
-     */
-    private final Color color;
+    private final DoubleProperty height = new SimpleDoubleProperty();
 
     /**
-     * Конструктор класс создающий цилиндр
-     * @param radius радиус цилиндра
-     * @param height высота цилиндра
-     * @param color цвет цилиндра
+     * Метод возвращающий свойство цилиндра "высота"
+     * @return свойство цилиндра "высота"
      */
-    public Tube(double radius, double height, Color color) {
-        this.height = height;
-        this.color = color;
-        this.radius = radius;
-        this.tube = new Cylinder(radius,height);
-        tube.setMaterial(new PhongMaterial(color));
+    public DoubleProperty heightProperty() {
+        return height ;
     }
 
     /**
-     * Метод возвращающий значение цвета цилиндра
-     * @return цвет цилиндра
+     * Метод возвращающий численное значение свойства цилиндра "высота"
+     * @return численное значение высоты цилиндра
      */
-    public Color getColor() {
-        return color;
+    public final double getHeight() {
+        return heightProperty().get();
     }
 
     /**
-     * Метод возвращающий значение радиуса цилиндра
-     * @return радиус цилмндра
+     * Метод изменяющий численное значение свойства цилиндра "высота"
+     * @param height численное значение высоты цилиндра
      */
-    public double getRadius() {
+    public final void setHeight(double height) {
+        heightProperty().set(height);
+    }
+
+    /**
+     * Свойство цилиндра - радиус
+     */
+    private final DoubleProperty radius = new SimpleDoubleProperty();
+
+    /**
+     Метод возвращающий свойство цилиндра "радиус"
+     * @return свойство цилиндра "радиус"
+     */
+    public DoubleProperty radiusProperty() {
         return radius;
     }
 
     /**
-     * Метод возвращающй значение высоты цилиндра
-     * @return высота цилиндра
+     * Метод возвращающий численное значение свойства цилиндра "радиус"
+     * @return численное значение радиуса цилиндра
      */
-    public double getHeight() {
-        return height;
+    public final double getRadius() {
+        return radiusProperty().get();
     }
 
     /**
-     * Метод возвращающий объект цилиндра
-     * @return цилиндр
+     * Метод изменяющий численное значение свойства цилиндра "радиус"
+     * @param radius численное значение радиуса цилиндра
      */
-    public Cylinder getTube() {
-        return tube;
+    public final void setRadius(double radius) {
+        radiusProperty().set(radius);
     }
 
     /**
-     * Метод изменяющий радиус цилиндра
-     * @param radius радиус цилиндра
+     * Конструктор класса создающий математическую модель цилиндра и переприсваивающий численные значения свойств
+     * @param radius численное значение радиуса цилиндра
+     * @param height численное значение высоты цилиндра
      */
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
-
-    /**
-     * Метож изменяющий высоту цилиндра
-     * @param height высота цилиндра
-     */
-    public void setHeight(double height) {
-        this.height = height;
+    public Tube(double radius, double height) {
+        setRadius(radius);
+        setHeight(height);
     }
 }

@@ -1,13 +1,12 @@
 package org.nanotubes.generation;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
+import org.nanotubes.generation.Geom.Tube;
 import org.nanotubes.generation.PoissonDisk.PoissonDiskIn2D;
 import org.nanotubes.generation.PoissonDisk.Vector2DDouble;
 import org.nanotubes.generation.Geom.Particle;
-import org.nanotubes.generation.Geom.Tube;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,8 +51,8 @@ public class Generation {
      * Метод создающий псевдослучайным образом (расспределение Пуассона) заданное количество частиц рассположенных на боковой поверхности цилиндра
      * @return список частиц
      */
-    public ObservableList<Particle> ParticlesGeneration() {
-        ObservableList<Particle> particlesList = FXCollections.observableArrayList();
+    public ObservableList<Particle> ParticlesGeneration(ObservableList<Particle> particlesList) {
+        particlesList.clear();
         List <Vector2DDouble> list = new PoissonDiskIn2D(0,0,tube.getRadius()*2*Math.PI-2*radius,
                 tube.getHeight(),radius*2, numberOfParticle).ListOfPointsPoissonDisk();
         Collections.shuffle(list);
