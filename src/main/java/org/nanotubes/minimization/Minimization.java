@@ -1,5 +1,6 @@
 package org.nanotubes.minimization;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import org.nanotubes.generation.Geom.Particle;
@@ -93,7 +94,7 @@ public class Minimization {
         ObservableList<Particle> list = poissonDiskCoordinatesParticles;
         double energyOld = MAX_VALUE;
         double energyNew = energyOfSystem(list);
-        int iter = 1;
+        int iter = 3000;
         arrayEnergy.add(energyNew);
         arrayCoefficientForZ.add(COEFFICIENT_FOR_Z);
         arrayCoefficientForAngel.add(COEFFICIENT_FOR_ANGLE);
@@ -123,9 +124,10 @@ public class Minimization {
     private void stepOfMinimization (ObservableList<Particle> list) {
         for (int i = 0; i < numberOfParticle; i++) {
             Particle particle = newParticle(list, i);
-            if (energyOfSystem(list) < energyOfSystem(list,particle,i) && particle.getZ() < (heightTube/2) && particle.getZ() > (-heightTube/2)) {
-                list.set(i, particle);
-                System.out.println(particle.getZ());
+            if (particle.getZ() < (heightTube/2) && particle.getZ() > (-heightTube/2)) {
+                if (energyOfSystem(list) > energyOfSystem(list,particle,i)) {
+                    list.set(i, particle);
+                }
             }
         }
     }
@@ -137,7 +139,7 @@ public class Minimization {
      * @return выбранную частицу с новыми координатами
      */
     private Particle newParticle(ObservableList<Particle> coordinates, int i) {
-        Particle particle = coordinates.get(i);
+        Particle particle = new Particle(coordinates.get(i).getPhi(),coordinates.get(i).getRho(),coordinates.get(i).getZ(),coordinates.get(i).getRadius(), coordinates.get(i).getColor());
         double ForcePhi = 0.0;
         double ForceZ = 0.0;
         for (int j = 0; j < numberOfParticle; j++) {
@@ -185,8 +187,9 @@ public class Minimization {
      * @return значение энергии системы при изменении координат одного элемета системы
      */
     private double energyOfSystem (ObservableList<Particle> coordinates, Particle particle, int i) {
-        coordinates.set(i,particle);
-        return energyOfSystem(coordinates);
+        ObservableList<Particle> list = FXCollections.observableList(coordinates);
+        list.set(i,particle);
+        return energyOfSystem(list);
     }
 
     /**

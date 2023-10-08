@@ -29,6 +29,7 @@ public class Particle {
      * Форма частицы
      */
    private final Sphere particle;
+   private final Color color;
 
     /**
      * Конструктор класса частица
@@ -44,6 +45,7 @@ public class Particle {
        this.phi = phi;
        this.rho = rho;
        this.z = z;
+       this.color = color;
        particle.setMaterial(new PhongMaterial(color));
        particle.setTranslateX(rho * Math.cos(phi));
        particle.setTranslateY(z);
@@ -141,4 +143,6 @@ public class Particle {
     public Sphere getParticle() {
         return particle;
     }
+
+    public Color getColor() { return color; }
 }
