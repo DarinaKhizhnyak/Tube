@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import org.nanotubes.generation.Geom.Particle;
 import org.nanotubes.generation.Geom.Tube;
 
+import java.util.ArrayList;
+
 import static java.lang.Math.pow;
 
 
@@ -19,7 +21,7 @@ public class Minimization {
     /**
      * Эмпирический коэффициент для координаты z
      */
-    private double COEFFICIENT_FOR_Z = 1;
+    private double COEFFICIENT_FOR_Z = 10;
 
     /**
      * Допустимое значение коэффициента k для угла
@@ -62,16 +64,16 @@ public class Minimization {
     /**
      * Массив для записи значений энергий системы на каждом шаге минимизации
      */
-    private double[] arrayEnergy = new double[0];
+    private final ArrayList<Double> arrayEnergy = new ArrayList<>();
     /**
      * Массив для записи значений коэффициента координаты на каждом шаге системы
      */
-    private double[] arrayCoefficientForZ = new double[0];
+    private final ArrayList<Double> arrayCoefficientForZ = new ArrayList<>();
 
     /**
      * Массив для записи значений коэффициента угла на каждом шаге системы
      */
-    private double[] arrayCoefficientForAngel = new double[0];
+    private final ArrayList<Double> arrayCoefficientForAngel = new ArrayList<>();
 
 
     /**
@@ -91,12 +93,13 @@ public class Minimization {
         ObservableList<Particle> list = poissonDiskCoordinatesParticles;
         double energyOld = MAX_VALUE;
         double energyNew = energyOfSystem(list);
+        int iter = 1;
+        arrayEnergy.add(energyNew);
+        arrayCoefficientForZ.add(COEFFICIENT_FOR_Z);
+        arrayCoefficientForAngel.add(COEFFICIENT_FOR_ANGLE);
 
-        arrayEnergy = extendArray(arrayEnergy, energyNew);
-        arrayCoefficientForZ = extendArray(arrayCoefficientForZ, COEFFICIENT_FOR_Z);
-        arrayCoefficientForAngel = extendArray(arrayCoefficientForAngel, COEFFICIENT_FOR_ANGLE);
-
-        while (COEFFICIENT_FOR_ANGLE > ACCEPTABLE_COEFFICIENT_VALUE_K_ANGEL && COEFFICIENT_FOR_Z > ACCEPTABLE_COEFFICIENT_VALUE_K_Z && energyOld >= energyNew) {
+        while (COEFFICIENT_FOR_ANGLE > ACCEPTABLE_COEFFICIENT_VALUE_K_ANGEL && COEFFICIENT_FOR_Z > ACCEPTABLE_COEFFICIENT_VALUE_K_Z && energyOld >= energyNew && iter > 0) {
+            iter--;
             if (energyOld - energyNew < ACCEPTABLE_VALUE_OF_ENERGY_DIFFERENCE) {
                 COEFFICIENT_FOR_Z = COEFFICIENT_FOR_Z/2;
                 COEFFICIENT_FOR_ANGLE = COEFFICIENT_FOR_ANGLE/2;
@@ -105,9 +108,9 @@ public class Minimization {
             stepOfMinimization(list);
             energyNew = energyOfSystem(list);
 
-            arrayEnergy = extendArray(arrayEnergy, energyNew);
-            arrayCoefficientForZ = extendArray(arrayCoefficientForZ, COEFFICIENT_FOR_Z);
-            arrayCoefficientForAngel = extendArray(arrayCoefficientForAngel, COEFFICIENT_FOR_ANGLE);
+            arrayEnergy.add(energyNew);
+            arrayCoefficientForZ.add(COEFFICIENT_FOR_Z);
+            arrayCoefficientForAngel.add(COEFFICIENT_FOR_ANGLE);
         }
 
         return list;
@@ -120,11 +123,11 @@ public class Minimization {
     private void stepOfMinimization (ObservableList<Particle> list) {
         for (int i = 0; i < numberOfParticle; i++) {
             Particle particle = newParticle(list, i);
-            if (energyOfSystem(list) < energyOfSystem(list,particle,i)) {
+            if (energyOfSystem(list) < energyOfSystem(list,particle,i) && particle.getZ() < (heightTube/2) && particle.getZ() > (-heightTube/2)) {
                 list.set(i, particle);
+                System.out.println(particle.getZ());
             }
         }
-        arrayEnergy = extendArray(arrayEnergy, energyOfSystem(list));
     }
 
     /**
@@ -187,23 +190,10 @@ public class Minimization {
     }
 
     /**
-     * Метод добавляющий в масив новое значение
-     * @param arr массив, в который необходимо добавить новое значение
-     * @param value значение, кторое необходимо добавить в массив
-     * @return массив с новым значением
-     */
-    private static double[] extendArray(double[] arr, double value) {
-        double[] newArray = new double[arr.length + 1];
-        System.arraycopy(arr, 0, newArray, 0, arr.length);
-        newArray[newArray.length - 1] = value;
-        return newArray;
-    }
-
-    /**
      * Метод возвращающий значения энергии системы на каждом шаге минимизации
      * @return массив значений энергии системы на каждом шаге минимизации
      */
-    public double[] getArrayEnergy() {
+    public ArrayList<Double> getArrayEnergy() {
         return arrayEnergy;
     }
 
@@ -211,7 +201,7 @@ public class Minimization {
      * Метод возвращающий значения коэффициента для координаты на каждом шаге минимизации
      * @return массив значений коэффициента на каждом шаге минимизации
      */
-    public double[] getArrayCoefficientForZ() {
+    public ArrayList<Double> getArrayCoefficientForZ() {
         return arrayCoefficientForZ;
     }
 
@@ -219,7 +209,7 @@ public class Minimization {
      * Метод возвращающий значения коэффициента для угла на каждом шаге минимизации
      * @return массив значений коэффициента на каждом шаге минимизации
      */
-    public double[] getArrayCoefficientForAngel() {
+    public ArrayList<Double> getArrayCoefficientForAngel() {
         return arrayCoefficientForAngel;
     }
 

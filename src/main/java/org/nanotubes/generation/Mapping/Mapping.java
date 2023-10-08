@@ -5,8 +5,6 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import org.nanotubes.generation.Geom.Particle;
 import org.nanotubes.generation.Geom.Tube;
-import org.nanotubes.generation.Mapping.TubeView;
-
 
 public class Mapping {
     /**

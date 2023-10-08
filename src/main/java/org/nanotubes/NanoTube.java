@@ -8,6 +8,9 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 
 import javafx.scene.*;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -27,6 +30,7 @@ import org.nanotubes.generation.Mapping.TubeView;
 import org.nanotubes.generation.Mapping.Mapping;
 import org.nanotubes.minimization.Minimization;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -146,10 +150,16 @@ public class NanoTube extends Application {
 
         });
 
-        buttonEnergyMinimization.setOnAction(actionEvent -> {
-            ObservableList<Particle> list = new Minimization(particlesList,2,tube).minimization();
+        buttonEnergyMinimization.setOnAction(e -> {
+            Minimization minimization = new Minimization(particlesList,2,tube);
+            ObservableList<Particle> list = minimization.minimization();
             new Mapping(list.size(),group,tube,list).MappingParticle();
+            buttonDiagram.setOnAction(actionEvent -> {
+                Chart(stage,"Step","E","Minimization Process for Energy", "Diagram for Energy",400,600, minimization.getArrayEnergy());
+                Chart(stage,"Step","k","Minimization Process for k", "Diagram for k",-300,-100, minimization.getArrayCoefficientForZ());
+            });
         });
+
 
         var scene = new Scene(Top, WIDTH,HEIGHT);
         stage.setScene(scene);
@@ -186,5 +196,36 @@ public class NanoTube extends Application {
             anchorX = event.getSceneX();
             anchorY = event.getSceneY();
         });
+    }
+
+    private void Chart (Stage stage, String x, String y, String title, String titleDiagram, int getX, int getY, ArrayList<Double> array) {
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel(y);
+        xAxis.setLabel(x);
+
+        final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+        lineChart.setTitle(title);
+
+        XYChart.Series series = new XYChart.Series();
+        series.setName(y);
+
+        if (array.size() <= 5000) {
+            for (int i = 0; i < array.size(); i++) {
+                series.getData().add(new XYChart.Data(i, array.get(i)));
+            }
+        } else {
+            for (int i = 0; i < 5000; i++) {
+                series.getData().add(new XYChart.Data(i, array.get(i)));
+            }
+        }
+        Scene scene = new Scene(lineChart, 700, 600);
+        lineChart.getData().add(series);
+        Stage WindowDiagram = new Stage();
+        WindowDiagram.setTitle(titleDiagram);
+        WindowDiagram.setScene(scene);
+        WindowDiagram.setX(stage.getX() + getX);
+        WindowDiagram.setY(stage.getY() + getY);
+        WindowDiagram.show();
     }
 }
