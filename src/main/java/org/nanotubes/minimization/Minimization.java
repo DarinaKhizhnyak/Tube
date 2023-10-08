@@ -1,6 +1,5 @@
 package org.nanotubes.minimization;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import org.nanotubes.generation.Geom.Particle;
@@ -18,27 +17,27 @@ public class Minimization {
     /**
      * Эмперический коэффициент для угла
      */
-    private double COEFFICIENT_FOR_ANGLE = 1;
+    private double COEFFICIENT_FOR_ANGLE = 0.5;
     /**
      * Эмпирический коэффициент для координаты z
      */
-    private double COEFFICIENT_FOR_Z = 10;
+    private double COEFFICIENT_FOR_Z = 1;
 
     /**
      * Допустимое значение коэффициента k для угла
      */
     @SuppressWarnings("FieldCanBeLocal")
-    private final double ACCEPTABLE_COEFFICIENT_VALUE_K_ANGEL = 0.0001;
+    private final double ACCEPTABLE_COEFFICIENT_VALUE_K_ANGEL = 0.00001;
     /**
      * Допустимое значение коэффициента k для координаты
      */
     @SuppressWarnings("FieldCanBeLocal")
-    private final double ACCEPTABLE_COEFFICIENT_VALUE_K_Z = 0.0001;
+    private final double ACCEPTABLE_COEFFICIENT_VALUE_K_Z = 0.00001;
     /**
      * Допустимое значение коэффициента разницы энергий
      */
     @SuppressWarnings("FieldCanBeLocal")
-    private final double ACCEPTABLE_VALUE_OF_ENERGY_DIFFERENCE = 0.0001;
+    private final double ACCEPTABLE_VALUE_OF_ENERGY_DIFFERENCE = 0.00001;
     /**
      * Максимальное значение для типа double
      */
@@ -94,11 +93,11 @@ public class Minimization {
         ObservableList<Particle> list = poissonDiskCoordinatesParticles;
         double energyOld = MAX_VALUE;
         double energyNew = energyOfSystem(list);
-        int iter = 3000;
+
         arrayEnergy.add(energyNew);
         arrayCoefficientForZ.add(COEFFICIENT_FOR_Z);
         arrayCoefficientForAngel.add(COEFFICIENT_FOR_ANGLE);
-
+        int iter = 100;
         while (COEFFICIENT_FOR_ANGLE > ACCEPTABLE_COEFFICIENT_VALUE_K_ANGEL && COEFFICIENT_FOR_Z > ACCEPTABLE_COEFFICIENT_VALUE_K_Z && energyOld >= energyNew && iter > 0) {
             iter--;
             if (energyOld - energyNew < ACCEPTABLE_VALUE_OF_ENERGY_DIFFERENCE) {
@@ -125,7 +124,7 @@ public class Minimization {
         for (int i = 0; i < numberOfParticle; i++) {
             Particle particle = newParticle(list, i);
             if (particle.getZ() < (heightTube/2) && particle.getZ() > (-heightTube/2)) {
-                if (energyOfSystem(list) > energyOfSystem(list,particle,i)) {
+                if (energyOfPartial(list,list.get(i),i) >= energyOfPartial(list,particle,i)) {
                     list.set(i, particle);
                 }
             }
@@ -183,13 +182,18 @@ public class Minimization {
      * Метод возвращающий значение энергии системы при изменении координат одного элемета системы
      * @param coordinates частицы
      * @param particle измененная частица
-     * @param i номер измененной частицы
      * @return значение энергии системы при изменении координат одного элемета системы
      */
-    private double energyOfSystem (ObservableList<Particle> coordinates, Particle particle, int i) {
-        ObservableList<Particle> list = FXCollections.observableList(coordinates);
-        list.set(i,particle);
-        return energyOfSystem(list);
+    private double energyOfPartial (ObservableList<Particle> coordinates, Particle particle, int i) {
+        double Energy = 0;
+        for (int j = 0; j < numberOfParticle; j++) {
+            if (i != j) {
+                Energy += 1/pow(particle.distance(coordinates.get(j)),degree);
+            }
+        }
+        Energy += degree / pow(particle.getZ() - heightTube / 2, degree) +
+                degree / pow(particle.getZ() + heightTube / 2, degree);
+        return Energy;
     }
 
     /**
