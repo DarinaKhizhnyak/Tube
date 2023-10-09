@@ -144,9 +144,9 @@ public class Minimization {
         for (int j = 0; j < numberOfParticle; j++) {
             Particle jParticle = coordinates.get(j);
             if (i != j) {
-                ForcePhi += (numberOfParticle * particle.getRho() *
+                ForcePhi += (degree * particle.getRho() *
                         (particle.getPhi() - jParticle.getPhi())) / pow(particle.distance(jParticle), degree + 2);
-                ForceZ += (numberOfParticle *
+                ForceZ += (degree *
                         (particle.getZ() - jParticle.getZ())) / pow(particle.distance(jParticle), degree + 2);
             }
         }
@@ -172,8 +172,8 @@ public class Minimization {
                     Energy += 1/pow(coordinates.get(i).distance(coordinates.get(j)),degree);
                 }
             }
-            Energy += degree / pow(coordinates.get(i).getZ() - heightTube / 2, degree) +
-                    degree / pow(coordinates.get(i).getZ() + heightTube / 2, degree);
+            Energy += 1 / pow(coordinates.get(i).getZ() - heightTube / 2, degree) +
+                    1 / pow(coordinates.get(i).getZ() + heightTube / 2, degree);
         }
         return Energy;
     }
@@ -191,8 +191,8 @@ public class Minimization {
                 Energy += 1/pow(particle.distance(coordinates.get(j)),degree);
             }
         }
-        Energy += degree / pow(particle.getZ() - heightTube / 2, degree) +
-                degree / pow(particle.getZ() + heightTube / 2, degree);
+        Energy += 1 / pow(particle.getZ() - heightTube / 2, degree) +
+                1 / pow(particle.getZ() + heightTube / 2, degree);
         return Energy;
     }
 
