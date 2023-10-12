@@ -147,7 +147,6 @@ public class NanoTube extends Application {
             tube.setRadius(Double.parseDouble(textFieldRadius.getText()));
             ObservableList<Particle> particles = new Generation(tube, n).ParticlesGeneration(particlesList);
             new Mapping(n,group,tube,particles).MappingParticle();
-
         });
 
         buttonEnergyMinimization.setOnAction(e -> {

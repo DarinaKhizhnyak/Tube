@@ -61,10 +61,18 @@ public class Particle {
      * @return расстояние между двумя точками
      */
     private static double distance(double x1, double y1, double x2, double y2) {
-        x2 -= x1;
-        y2 -= y1;
-        return Math.sqrt(x2 * x2 + y2 * y2);
+        x1 -= x2;
+        y1 -= y2;
+        return Math.sqrt(x1 * x1 + y1 * y1);
     }
+
+    private static double distanceWith2Pi(double x1, double y1, double x2, double y2) {
+        x1 = 2*Math.PI - Math.abs(x1 - x2);
+        y1 -= y2;
+        return Math.sqrt(x1 * x1 + y1 * y1);
+    }
+
+    public double distanceWith2Pi(Particle p) { return distanceWith2Pi(getPhi()*getRho(), getZ(), p.getPhi()*p.getRho(),p.getZ()); }
 
     /**
      * Метод возвращающий расстояние от данной частицы к заданной частице в в плоскости развертки цилиндра
